@@ -44,6 +44,50 @@ modules:
       ifType:
         type: EnumAsInfo
 
+# Lenovo Switches Using SNMPv3
+
+ lenovo_switches_module:
+  version: 3
+  auth:
+    username: user
+    auth_protocol: SHA
+    password: auth-password
+    priv_protocol: AES
+    priv_password: priv-password
+    security_level: authPriv
+  walk:
+    - sysUpTime                        # 1.3.6.1.2.1.1.3
+    - interfaces                       # 1.3.6.1.2.1.2
+    - ifXTable                         # 1.3.6.1.2.1.31.1.1
+    - ifOperStatus                     # 1.3.6.1.2.1.2.2.1.8
+    - linkUpDownNotificationsGroup     # 1.3.6.1.2.1.31.2.1.14
+    - host                             # 1.3.6.1.2.1.25
+                                       #hrSystem        OBJECT IDENTIFIER ::= { host 1 }
+                                       #hrStorage       OBJECT IDENTIFIER ::= { host 2 }
+                                       #hrDevice        OBJECT IDENTIFIER ::= { host 3 }
+                                       #hrSWRun         OBJECT IDENTIFIER ::= { host 4 }
+                                       #hrSWRunPerf     OBJECT IDENTIFIER ::= { host 5 }
+                                       #hrSWInstalled   OBJECT IDENTIFIER ::= { host 6 }
+                                       #hrMIBAdminInfo  OBJECT IDENTIFIER ::= { host 7 }
+    - hrSWRunStatus                    # 1.3.6.1.2.1.25.4.2.1.7
+    - hrSWRunPerfCPU                   # 1.3.6.1.2.1.25.5.1.1.1
+    - hrSWRunPerfMem                   # 1.3.6.1.2.1.25.5.1.1.2
+    - hrMemorySize                     # 1.3.6.1.2.1.25.2.2
+    - hrStorageUsed                    # 1.3.6.1.2.1.25.2.3.1.6
+    - hrStorageSize                    # 1.3.6.1.2.1.25.2.3.1.5
+    - hrSystemUptime                   # 1.3.6.1.2.1.25.1.1
+    - hrDeviceStatus                   # 1.3.6.1.2.1.25.3.2.1.5
+    - 1.3.6.1.4.1.19046.2.3.11.1.2.1.5 # LenovoEnvMibFanState # 1.3.6.1.4.1.19046.2.3.11.1.2.1.5
+    - 1.3.6.1.4.1.19046.2.3.11.1.1.1   # lenovoEnvMibPowerSupplyEntry # 1.3.6.1.4.1.19046.2.3.11.1.1.1
+    - vrrpOperationsState              # to check 1.3.6.1.2.1.68.1.7.1.4 or 1.3.6.1.2.1.68.1.3.1.3
+  lookups:
+    - source_indexes: [ifIndex]
+      lookup: ifOperStatus
+    - source_indexes: [lenovoEnvMibFanIndex]
+      lookup: lenovoEnvMibFanEntry
+    - source_indexes: [lenovoEnvMibPowerSupplyIndex]
+      lookup: LenovoEnvMibPowerSupplyEntry
+
 # APC/Schneider UPS Network Management Cards
 #
 # Note: older management cards only support SNMP v1 (AP9606 and
